@@ -19,7 +19,7 @@ TODO
 # Output
 
 # TODO / DONE
-- [] Add lockfile to gitignore
+- [x] Add lockfile to gitignore
 - [] Check and reorder variables
 - [] Check outputs
 - [] Complete this readme
