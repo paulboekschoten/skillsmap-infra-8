@@ -1,10 +1,34 @@
-locals {
-  any_port      = 0
-  any_icmp_port = -1
-  any_protocol  = "-1"
-  tcp_protocol  = "tcp"
-  icmp_protocol = "icmp"
-  all_ips       = ["0.0.0.0/0"]
+variable "cert_email" {
+  description = "email address used to obtain ssl certificate"
+  type        = string
+}
+
+variable "route53_zone" {
+  description = "the domain to use for the url"
+  type        = string
+}
+
+variable "route53_subdomain" {
+  description = "the subdomain of the url"
+  type        = string
+}
+
+variable "region" {
+  description = "AWS region"
+  type        = string
+  default     = "eu-west-3"
+}
+
+variable "ami" {
+  description = "AMI id of the image"
+  type        = string
+  default     = "ami-0042da0ea9ad6dd83"
+}
+
+variable "instance_type" {
+  description = "instance type"
+  type        = string
+  default     = "t2.micro"
 }
 
 variable "http_port" {

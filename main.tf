@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "eu-west-3"
+  region = var.region
 }
 
 provider "acme" {
@@ -91,8 +91,8 @@ resource "aws_security_group_rule" "allow_all_outbound" {
 
 # EC2 instance
 resource "aws_instance" "paul-web-tf" {
-  ami                    = "ami-0042da0ea9ad6dd83"
-  instance_type          = "t2.micro"
+  ami                    = var.ami
+  instance_type          = var.instance_type
   key_name               = aws_key_pair.paul-tf.key_name
   vpc_security_group_ids = [aws_security_group.paul-sg-tf.id]
 
@@ -105,13 +105,13 @@ resource "aws_instance" "paul-web-tf" {
 ## route53 fqdn
 # fetch zone
 data "aws_route53_zone" "selected" {
-  name         = "tf-support.hashicorpdemo.com"
+  name         = var.route53_zone
   private_zone = false
 }
 # create record
 resource "aws_route53_record" "www" {
   zone_id = data.aws_route53_zone.selected.zone_id
-  name    = "cloudinfrapaultf.${data.aws_route53_zone.selected.name}"
+  name    = "${var.route53_subdomain}.${data.aws_route53_zone.selected.name}"
   type    = "A"
   ttl     = "300"
   records = [aws_instance.paul-web-tf.public_ip]
@@ -126,7 +126,7 @@ resource "tls_private_key" "cert_private_key" {
 # register
 resource "acme_registration" "registration" {
   account_key_pem = tls_private_key.cert_private_key.private_key_pem
-  email_address   = "paul.boekschoten@hashicorp.com"
+  email_address   = var.cert_email
 }
 # get certificate
 resource "acme_certificate" "certificate" {
